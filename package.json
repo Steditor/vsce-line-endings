@@ -2,9 +2,12 @@
     "name": "line-endings",
     "displayName": "line-endings",
     "description": "Show line endings (CR/LF)",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "publisher": "steditor",
-    "repository": "github:steditor/vsce-line-endings",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Steditor/vsce-line-endings.git"
+    },
     "license": "MIT",
     "engines": {
         "vscode": "^1.19.0"

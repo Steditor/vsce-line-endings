@@ -15,6 +15,10 @@ As soon as [this issue](https://github.com/Microsoft/vscode/issues/127) is dealt
 
 ## Release Notes
 
+### 1.0.2
+
+Change repository field in `package.json` to full url
+
 ### 1.0.0
 
 Initial release of the extension
