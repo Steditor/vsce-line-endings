@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "publisher": "steditor",
     "repository": "github:steditor/vsce-line-endings",
+    "license": "MIT",
     "engines": {
         "vscode": "^1.19.0"
     },
