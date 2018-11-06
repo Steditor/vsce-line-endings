@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the "line-endings" extension will be documented in this file.
 
+## [1.0.3]
+- Update npm dependencies
+
 ## [1.0.2]
  - Change repository field in `package.json` to full url
 
