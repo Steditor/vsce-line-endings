@@ -1,12 +1,13 @@
 "use strict";
 import * as vscode from "vscode";
+import * as fs from "fs";
 
 function isActive(): boolean {
     return vscode.workspace.getConfiguration("editor", null).get("renderControlCharacters");
 }
 
-const lfDecoration = createDecorationType("LF", "after");
-const crDecoration = createDecorationType("CR", "before");
+const lfDecoration = createDecorationType("\\n", "after");
+const crDecoration = createDecorationType("\\r", "before");
 
 let timeout = null;
 
@@ -58,22 +59,40 @@ export function activate(context: vscode.ExtensionContext) {
 
     function updateDecorations() {
         if (activeEditor && show) {
-            const text = activeEditor.document.getText();
-            activeEditor.setDecorations(lfDecoration, createDecorations(/\n/g, text, activeEditor));
-            activeEditor.setDecorations(crDecoration, createDecorations(/\r/g, text, activeEditor));
+            try{
+                // Call the function and handle the returned data
+                // const content = new Uint8Array(Buffer.from(activeEditor.document.getText(), 'utf8'));
+                const docUri = activeEditor.document.uri;
+                // Get the file path from the URI
+                const filePath = docUri.fsPath;
+                // Read the file synchronously as a buffer
+                const fileContent = fs.readFileSync(filePath);
+                // Convert the buffer to a Uint8Array
+                const content = new Uint8Array(fileContent);
+                const rangeList10 = [];
+                const rangeList13 = [];
+                // Loop through the Uint8Array content
+                for (let i = 0; i < content.length; i++) {
+                    // Check for values 10 (newline) or 13 (carriage return)
+                    if (content[i] === 10){
+                        let position = activeEditor.document.positionAt(i);
+                        let range = new vscode.Range(position, position);
+                        rangeList10.push(range);
+                    }
+                    else if (content[i] === 13) {
+                        let position = activeEditor.document.positionAt(i);
+                        let range = new vscode.Range(position, position);
+                        rangeList13.push(range);
+                    }
+                }
+                activeEditor.setDecorations(lfDecoration, rangeList13);
+                activeEditor.setDecorations(crDecoration, rangeList10);
+            } catch (err) {
+                // console.error("Error reading file:", err);
+            }
         }
     }
-}
 
-function createDecorations(regEx: RegExp, text: string, activeEditor: vscode.TextEditor): vscode.Range[] {
-    const ranges: vscode.Range[] = [];
-
-    for (let match = regEx.exec(text); match; match = regEx.exec(text)) {
-        const position = activeEditor.document.positionAt(match.index);
-        ranges.push(new vscode.Range(position, position));
-    }
-
-    return ranges;
 }
 
 export function deactivate() {
